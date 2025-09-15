@@ -25,7 +25,7 @@ ENV NODE_ENV=production
 ENV PORT=3001
 COPY --from=builder /app/apps/web/.next/standalone ./
 COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=builder /app/apps/web/public ./apps/web/public
+# COPY --from=builder /app/apps/web/public ./apps/web/public
 EXPOSE 3001
 CMD ["node", "apps/web/server.js"]
 
@@ -38,8 +38,8 @@ COPY --from=builder /app/apps/server/package.json ./apps/server/
 COPY --from=builder /app/apps/server/drizzle.config.ts ./apps/server/
 COPY --from=builder /app/node_modules ./node_modules
 
-# Copy migration files if they exist
-COPY --from=builder /app/apps/server/drizzle ./apps/server/drizzle
+# Copy existing migrations from src/db/migrations/
+COPY --from=builder /app/apps/server/src/db/migrations ./apps/server/src/db/migrations
 
 WORKDIR /app/apps/server
 EXPOSE 3000

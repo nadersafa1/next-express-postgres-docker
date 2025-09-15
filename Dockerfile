@@ -13,8 +13,6 @@ RUN bun install --frozen-lockfile
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
-COPY --from=deps /app/apps/server/node_modules ./apps/server/node_modules
 COPY . .
 
 # Build both apps using Turbo
@@ -39,7 +37,6 @@ COPY --from=builder /app/apps/server/dist ./apps/server/dist
 COPY --from=builder /app/apps/server/package.json ./apps/server/
 COPY --from=builder /app/apps/server/drizzle.config.ts ./apps/server/
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/server/node_modules ./apps/server/node_modules
 
 # Copy migration files if they exist
 COPY --from=builder /app/apps/server/drizzle ./apps/server/drizzle

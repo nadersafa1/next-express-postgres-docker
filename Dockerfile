@@ -42,7 +42,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/server/src/db/migrations ./apps/server/src/db/migrations
 
 WORKDIR /app/apps/server
-EXPOSE 3000
+EXPOSE 3002
 
 # Run migrations and start server
-CMD ["sh", "-c", "bun run db:migrate && bun run start"]
+CMD ["sh", "-c", "PORT=3002 bun run db:migrate && PORT=3002 bun run start"]

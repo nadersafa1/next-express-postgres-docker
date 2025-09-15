@@ -1,0 +1,55 @@
+name: next-express-postgres-docker
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:3000
+      - BETTER_AUTH_URL=http://api:3000
+      - BETTER_AUTH_SECRET=secret
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: server
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/next-express-postgres-docker
+      - CORS_ORIGIN=http://localhost:3000
+      - BETTER_AUTH_SECRET=secret
+      - BETTER_AUTH_URL=http://localhost:3000
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: next-express-postgres-docker-postgres
+    environment:
+      POSTGRES_DB: next-express-postgres-docker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - next-express-postgres-docker_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  next-express-postgres-docker_postgres_data:

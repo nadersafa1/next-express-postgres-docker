@@ -9,7 +9,13 @@ export const auth = betterAuth<BetterAuthOptions>({
 
 		schema: schema,
 	}),
-	trustedOrigins: [process.env.CORS_ORIGIN || ""],
+	baseURL: process.env.BETTER_AUTH_URL || "",
+	trustedOrigins: [
+		process.env.CORS_ORIGIN || "",
+		"https://hello.dishyy.com",
+		"http://hello.dishyy.com",
+		"https://hello.dishyy.com/api",
+	],
 	emailAndPassword: {
 		enabled: true,
 	},

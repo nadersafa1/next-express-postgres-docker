@@ -15,7 +15,18 @@ app.use(
 	}),
 );
 
-app.all("/api/auth{/*path}", toNodeHandler(auth));
+// Debug middleware to see what origin is being sent
+app.use("/auth", (req, res, next) => {
+	console.log("🔍 Auth request debug:");
+	console.log("Origin header:", req.headers.origin);
+	console.log("Referer header:", req.headers.referer);
+	console.log("Host header:", req.headers.host);
+	console.log("CORS_ORIGIN env:", process.env.CORS_ORIGIN);
+	console.log("BETTER_AUTH_URL env:", process.env.BETTER_AUTH_URL);
+	next();
+});
+
+app.all("/auth{/*path}", toNodeHandler(auth));
 
 app.use(express.json());
 

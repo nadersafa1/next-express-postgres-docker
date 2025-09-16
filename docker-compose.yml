@@ -11,8 +11,8 @@ services:
     depends_on:
       - api
     environment:
-      - NEXT_PUBLIC_API_URL=http://api:3002
-      - BETTER_AUTH_URL=http://api:3002
+      - NEXT_PUBLIC_API_URL=https://hello.dishyy.com/api
+      - BETTER_AUTH_URL=https://hello.dishyy.com/api
       - BETTER_AUTH_SECRET=secret
     restart: unless-stopped
 
@@ -28,9 +28,9 @@ services:
         condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/next-express-postgres-docker
-      - CORS_ORIGIN=http://localhost:3001
+      - CORS_ORIGIN=https://hello.dishyy.com
       - BETTER_AUTH_SECRET=secret
-      - BETTER_AUTH_URL=http://localhost:3002
+      - BETTER_AUTH_URL=https://hello.dishyy.com/api
     restart: unless-stopped
 
   postgres:
